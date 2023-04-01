@@ -99,6 +99,9 @@ return packer.startup(function(use)
 		},
 	})
 
+	-- LSP Kind
+	use("onsails/lspkind-nvim")
+
 	-- Zen
 	use("folke/zen-mode.nvim")
 
@@ -111,8 +114,12 @@ return packer.startup(function(use)
 	-- Database SQL for persisting plugin state
 	use("kkharji/sqlite.lua")
 
-	-- CoPilot
-	use("github/copilot.vim")
+	-- Copilot
+	use("zbirenbaum/copilot.lua")
+	use({
+		"zbirenbaum/copilot-cmp",
+		after = { "copilot.lua" },
+	})
 
 	-- Context status line
 	use("SmiteshP/nvim-navic")
