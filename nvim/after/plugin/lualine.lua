@@ -131,6 +131,11 @@ lualine.setup({
 			-- spaces,
 			"encoding",
 			filetype,
+			{
+				require("lazy.status").updates,
+				cond = require("lazy.status").has_updates,
+				color = { fg = "#ff9e64" },
+			},
 		},
 		lualine_y = {
 			{ current_buffer_number, color = { fg = "#A9A9A9" } },

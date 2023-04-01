@@ -1,264 +1,338 @@
-local fn = vim.fn
-
--- Automatically install packer
-local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-if fn.empty(fn.glob(install_path)) > 0 then
-	PACKER_BOOTSTRAP = fn.system({
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
 		"git",
 		"clone",
-		"--depth",
-		"1",
-		"https://github.com/wbthomason/packer.nvim",
-		install_path,
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
 	})
-	print("Installing packer close and reopen Neovim...")
-	vim.cmd([[packadd packer.nvim]])
 end
 
--- AutoFommand that reloads neovim whenever you save the plugins.lua file
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]])
+vim.opt.rtp:prepend(lazypath)
 
--- Use a protected call so we don't error out on first use
-local status_ok, packer = pcall(require, "packer")
+local status_ok, lazy = pcall(require, "lazy")
 if not status_ok then
 	return
 end
 
--- Install your plugins here
-return packer.startup(function(use)
-	--	use { "moll/vim-bbye" }
-
+local plugins = {
 	-- Cheat sheet
-	use({ "folke/which-key.nvim" })
-
+	"folke/which-key.nvim",
 	--	Welcome screen
-	use({ "goolord/alpha-nvim" })
-
+	"goolord/alpha-nvim",
 	--	Project
-	use({ "ahmedkhalf/project.nvim" })
-
+	"ahmedkhalf/project.nvim",
 	--  Loading time
-	use({ "lewis6991/impatient.nvim" })
-
+	"lewis6991/impatient.nvim",
 	-- Telescope
-	use({
+	{
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.0",
-		requires = { { "nvim-lua/plenary.nvim" } },
-	})
-	use("LukasPietzschmann/telescope-tabs")
-
+		version = "0.1.0",
+		dependencies = { { "nvim-lua/plenary.nvim" } },
+	},
+	"LukasPietzschmann/telescope-tabs",
 	-- Colorschemes
-	use("olimorris/onedarkpro.nvim")
-
+	"olimorris/onedarkpro.nvim",
 	-- Treesitter
-	use("nvim-treesitter/nvim-treesitter", { run = ":TSUpdate" })
-	use("nvim-treesitter/nvim-treesitter-textobjects")
-
+	"nvim-treesitter/nvim-treesitter",
+	"nvim-treesitter/nvim-treesitter-textobjects",
 	-- Harpoon
-	use("theprimeagen/harpoon")
-
+	"theprimeagen/harpoon",
 	-- Undo
-	use("mbbill/undotree")
-
+	"mbbill/undotree",
 	-- Git
-	use({ "lewis6991/gitsigns.nvim" })
-	use({ "f-person/git-blame.nvim" })
-	use({ "ruifm/gitlinker.nvim" })
-
+	"lewis6991/gitsigns.nvim",
+	"f-person/git-blame.nvim",
+	"ruifm/gitlinker.nvim",
 	-- LSP
-	use({
+	{
 		"VonHeikemen/lsp-zero.nvim",
-		requires = {
+		dependencies = {
 			-- LSP Support
-			{ "neovim/nvim-lspconfig" },
-			{ "williamboman/mason.nvim" },
-			{ "williamboman/mason-lspconfig.nvim" },
-			{ "jose-elias-alvarez/null-ls.nvim" },
-			{ "jayp0521/mason-null-ls.nvim" },
-			{ "lvimuser/lsp-inlayhints.nvim" },
-			{ "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
-
+			"neovim/nvim-lspconfig",
+			"williamboman/mason.nvim",
+			"williamboman/mason-lspconfig.nvim",
+			"jose-elias-alvarez/null-ls.nvim",
+			"jayp0521/mason-null-ls.nvim",
+			"lvimuser/lsp-inlayhints.nvim",
+			"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
 			-- Autocompletion CMP
-			{ "hrsh7th/nvim-cmp" },
-			{ "hrsh7th/cmp-buffer" },
-			{ "hrsh7th/cmp-path" },
-			{ "saadparwaiz1/cmp_luasnip" },
-			{ "hrsh7th/cmp-nvim-lsp" },
-			{ "hrsh7th/cmp-nvim-lua" },
-			{ "hrsh7th/cmp-emoji" },
-
+			"hrsh7th/nvim-cmp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"saadparwaiz1/cmp_luasnip",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-nvim-lua",
+			"hrsh7th/cmp-emoji",
 			-- Snippets
-			{ "L3MON4D3/LuaSnip" },
-			{ "rafamadriz/friendly-snippets" },
+			"L3MON4D3/LuaSnip",
+			"rafamadriz/friendly-snippets",
 		},
-	})
-
+	},
 	-- LSP Kind
-	use("onsails/lspkind-nvim")
-
+	"onsails/lspkind-nvim",
 	-- Zen
-	use("folke/zen-mode.nvim")
-
+	"folke/zen-mode.nvim",
 	-- Markers
-	use("chentoast/marks.nvim")
-
+	"chentoast/marks.nvim",
 	-- Persist multi clipboard
-	use("AckslD/nvim-neoclip.lua")
-
+	"AckslD/nvim-neoclip.lua",
 	-- Database SQL for persisting plugin state
-	use("kkharji/sqlite.lua")
-
+	"kkharji/sqlite.lua",
 	-- Copilot
-	use("zbirenbaum/copilot.lua")
-	use({
+	"zbirenbaum/copilot.lua",
+	{
 		"zbirenbaum/copilot-cmp",
-		after = { "copilot.lua" },
-	})
-
+		dependencies = { "copilot.lua" },
+	},
 	-- Context status line
-	use("SmiteshP/nvim-navic")
-
+	"SmiteshP/nvim-navic",
 	-- Context closing brackets
-	use("haringsrob/nvim_context_vt")
-
+	"haringsrob/nvim_context_vt",
 	-- Indent
-	use("lukas-reineke/indent-blankline.nvim")
-
+	"lukas-reineke/indent-blankline.nvim",
 	-- Icons
-	use("nvim-tree/nvim-web-devicons")
-
+	"nvim-tree/nvim-web-devicons",
 	-- Comments
-	use("numToStr/Comment.nvim")
-	use("JoosepAlviste/nvim-ts-context-commentstring")
-	use("folke/todo-comments.nvim")
-
+	"numToStr/Comment.nvim",
+	"JoosepAlviste/nvim-ts-context-commentstring",
+	"folke/todo-comments.nvim",
 	-- Brackets
-	use("p00f/nvim-ts-rainbow")
-
+	"p00f/nvim-ts-rainbow",
 	-- Autopair
-	use("windwp/nvim-autopairs")
-
+	"windwp/nvim-autopairs",
 	--Tree
-	use("kyazdani42/nvim-tree.lua")
-
+	"kyazdani42/nvim-tree.lua",
 	-- Line
-	use({
-		"nvim-lualine/lualine.nvim",
-		requires = { "kyazdani42/nvim-web-devicons", opt = true },
-	})
-
+	"nvim-lualine/lualine.nvim",
 	--  Bufferline
-	use({ "akinsho/bufferline.nvim", tag = "v3.*", requires = "nvim-tree/nvim-web-devicons" })
-
+	{
+		"akinsho/bufferline.nvim",
+		version = "v3.*",
+	},
 	-- Terminal
-	use({ "akinsho/toggleterm.nvim" })
-
+	"akinsho/toggleterm.nvim",
 	-- Move through highlights
-	use({ "jinh0/eyeliner.nvim" })
-	use({ "ggandor/leap.nvim" })
-
+	"jinh0/eyeliner.nvim",
+	"ggandor/leap.nvim",
 	-- Pick lines
-	use({ "nacro90/numb.nvim" })
-
+	"nacro90/numb.nvim",
 	-- Scrolling
-	use({ "opalmay/vim-smoothie" })
-	use({ "petertriho/nvim-scrollbar" })
-
+	"opalmay/vim-smoothie",
+	"petertriho/nvim-scrollbar",
 	-- Progress
-	use({ "j-hui/fidget.nvim" })
-
+	"j-hui/fidget.nvim",
 	-- Auto rename tags
-	use({ "windwp/nvim-ts-autotag" })
-
+	"windwp/nvim-ts-autotag",
 	-- Auto surround words
-	use({ "kylechui/nvim-surround" })
-
+	"kylechui/nvim-surround",
 	-- Colorizer
-	use({ "NvChad/nvim-colorizer.lua" })
-
+	"NvChad/nvim-colorizer.lua",
 	-- Highlighter
-	use({ "RRethy/vim-illuminate" })
-
+	"RRethy/vim-illuminate",
 	-- Troubleshoot
-	use({ "folke/trouble.nvim" })
-
+	"folke/trouble.nvim",
 	-- Package.json
-	use({
+	{
 		"vuki656/package-info.nvim",
-		requires = {
+		dependencies = {
 			"MunifTanjim/nui.nvim",
 		},
-	})
-
+	},
 	-- Cycle buffer
-	use({ "ghillb/cybu.nvim" })
-
+	"ghillb/cybu.nvim",
 	-- Multiple cursors
-	use({ "mg979/vim-visual-multi" })
-
+	"mg979/vim-visual-multi",
 	-- Vim practice games
-	use({ "theprimeagen/vim-be-good" })
-
+	"theprimeagen/vim-be-good",
 	-- Diff tool
-	use({ "sindrets/diffview.nvim" })
-
+	"sindrets/diffview.nvim",
 	-- Replace tool
-	use({ "windwp/nvim-spectre" })
-
+	"windwp/nvim-spectre",
 	-- Haskell tools
-	use({ "mrcjkb/haskell-tools.nvim" })
-
+	"mrcjkb/haskell-tools.nvim",
 	-- Chat GPT
-	use({
+	{
 		"jackMort/ChatGPT.nvim",
-		requires = {
+		dependencies = {
 			"MunifTanjim/nui.nvim",
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope.nvim",
 		},
-	})
-
+	},
 	-- Debugging
-	use({ "mfussenegger/nvim-dap" })
-
+	"mfussenegger/nvim-dap",
 	-- Debugger user interface
-	use({ "rcarriga/nvim-dap-ui" })
-
+	"rcarriga/nvim-dap-ui",
 	-- JS DAP Adapter
-	use({ "mxsdev/nvim-dap-vscode-js" })
-
+	"mxsdev/nvim-dap-vscode-js",
 	-- Microsdt VSCode JS debugger
-	use({
+	{
 		"microsoft/vscode-js-debug",
-		opt = true,
-		run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
-	})
-
+		lazy = true,
+		build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
+	},
 	-- Telescope DAP Plugin
-	use("nvim-telescope/telescope-dap.nvim")
-
+	"nvim-telescope/telescope-dap.nvim",
 	-- Highlight DAP Plugin
-	use("theHamsta/nvim-dap-virtual-text")
-
+	"theHamsta/nvim-dap-virtual-text",
 	-- Test runner
-	use({
+	{
 		"nvim-neotest/neotest",
-		requires = {
+		dependencies = {
 			"haydenmeade/neotest-jest",
 			"mrcjkb/neotest-haskell",
 			"antoinemadec/FixCursorHold.nvim",
 		},
-	})
+	},
+}
 
-	-- Automatically set up your configuration after cloning packer.nvim
-	-- Put this at the end after all plugins
-	if PACKER_BOOTSTRAP then
-		require("packer").sync()
-	end
-end)
+local opts = {
+	root = vim.fn.stdpath("data") .. "/lazy", -- directory where plugins will be installed
+	defaults = {
+		lazy = false, -- should plugins be lazy-loaded?
+		version = nil,
+		-- default `cond` you can use to globally disable a lot of plugins
+		-- when running inside vscode for example
+		cond = nil,
+		-- version = "*", -- enable this to try installing the latest stable versions of plugins
+	},
+	-- leave nil when passing the spec as the first argument to setup()
+	spec = nil,
+	lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json", -- lockfile generated after running update.
+	concurrency = nil, ---@type number limit the maximum amount of concurrent tasks
+	git = {
+		-- defaults for the `Lazy log` command
+		-- log = { "-10" }, -- show the last 10 commits
+		log = { "--since=3 days ago" }, -- show commits from the last 3 days
+		timeout = 120, -- kill processes that take more than 2 minutes
+		url_format = "https://github.com/%s.git",
+		-- lazy.nvim requires git >=2.19.0. If you really want to use lazy with an older version,
+		-- then set the below to false. This should work, but is NOT supported and will
+		-- increase downloads a lot.
+		filter = true,
+	},
+	dev = {
+		-- directory where you store your local plugin projects
+		path = "~/projects",
+		---@type string[] plugins that match these patterns will use your local versions instead of being fetched from GitHub
+		patterns = {}, -- For example {"folke"}
+		fallback = false, -- Fallback to git when local plugin doesn't exist
+	},
+	install = {
+		-- install missing plugins on startup. This doesn't increase startup time.
+		missing = true,
+		-- try to load one of these colorschemes when starting an installation during startup
+		colorscheme = { "habamax" },
+	},
+	ui = {
+		-- a number <1 is a percentage., >1 is a fixed size
+		size = { width = 0.8, height = 0.8 },
+		wrap = true, -- wrap the lines in the ui
+		-- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
+		border = "none",
+		icons = {
+			cmd = " ",
+			config = "",
+			event = "",
+			ft = " ",
+			init = " ",
+			import = " ",
+			keys = " ",
+			lazy = "󰒲 ",
+			loaded = "●",
+			not_loaded = "○",
+			plugin = " ",
+			runtime = " ",
+			source = " ",
+			start = "",
+			task = "✔ ",
+			list = {
+				"●",
+				"➜",
+				"★",
+				"‒",
+			},
+		},
+		-- leave nil, to automatically select a browser depending on your OS.
+		-- If you want to use a specific browser, you can define it here
+		browser = nil, ---@type string?
+		throttle = 20, -- how frequently should the ui process render events
+		custom_keys = {
+			-- you can define custom key maps here.
+			-- To disable one of the defaults, set it to false
+
+			-- open lazygit log
+			["<localleader>l"] = function(plugin)
+				require("lazy.util").float_term({ "lazygit", "log" }, {
+					cwd = plugin.dir,
+				})
+			end,
+
+			-- open a terminal for the plugin dir
+			["<localleader>t"] = function(plugin)
+				require("lazy.util").float_term(nil, {
+					cwd = plugin.dir,
+				})
+			end,
+		},
+	},
+	diff = {
+		-- diff command <d> can be one of:
+		-- * browser: opens the github compare view. Note that this is always mapped to <K> as well,
+		--   so you can have a different command for diff <d>
+		-- * git: will run git diff and open a buffer with filetype git
+		-- * terminal_git: will open a pseudo terminal with git diff
+		-- * diffview.nvim: will open Diffview to show the diff
+		cmd = "git",
+	},
+	checker = {
+		-- automatically check for plugin updates
+		enabled = false,
+		concurrency = nil, ---@type number? set to 1 to check for updates very slowly
+		notify = true, -- get a notification when new updates are found
+		frequency = 3600, -- check for updates every hour
+	},
+	change_detection = {
+		-- automatically check for config file changes and reload the ui
+		enabled = true,
+		notify = true, -- get a notification when changes are found
+	},
+	performance = {
+		cache = {
+			enabled = true,
+		},
+		reset_packpath = true, -- reset the package path to improve startup time
+		rtp = {
+			reset = true, -- reset the runtime path to $VIMRUNTIME and your config directory
+			---@type string[]
+			paths = {}, -- add any custom paths here that you want to includes in the rtp
+			---@type string[] list any plugins you want to disable here
+			disabled_plugins = {
+				-- "gzip",
+				-- "matchit",
+				-- "matchparen",
+				-- "netrwPlugin",
+				-- "tarPlugin",
+				-- "tohtml",
+				-- "tutor",
+				-- "zipPlugin",
+			},
+		},
+	},
+	-- lazy can generate helptags from the headings in markdown readme files,
+	-- so :help works even for plugins that don't have vim docs.
+	-- when the readme opens with :help it will be correctly displayed as markdown
+	readme = {
+		enabled = true,
+		root = vim.fn.stdpath("state") .. "/lazy/readme",
+		files = { "README.md", "lua/**/README.md" },
+		-- only generate markdown helptags for plugins that dont have docs
+		skip_if_doc_exists = true,
+	},
+	state = vim.fn.stdpath("state") .. "/lazy/state.json", -- state info for checker and other things
+}
+
+lazy.setup(plugins, opts)
