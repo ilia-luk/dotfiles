@@ -34,3 +34,6 @@ tmuxinator
 
 github-copilot
 
+tmux/plugins/
+tmux/*.log
+
