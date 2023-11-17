@@ -40,3 +40,8 @@ set LOCAL_CONFIG (dirname (status --current-filename))/config-local.fish
 if test -f $LOCAL_CONFIG
     source $LOCAL_CONFIG
 end
+
+eval (zellij setup --generate-auto-start fish | string collect)
+
+
+set -g ZELLIJ_AUTO_EXIT true
