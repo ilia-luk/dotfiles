@@ -37,6 +37,11 @@ set -gx SSH_KEY_PATH '~/.ssh/dsa_id'
 # M1 Homebrew path
 set -gx BREW /opt/homebrew
 
+# Node
+set -gx NODENV_GLOBAL_NODE_VERSION (nodenv global)
+set -gx NODENV_GLOBAL_NODE $HOME/.nodenv/versions/$NODENV_GLOBAL_NODE_VERSION/bin
+set -gx PATH $PATH $NODENV_GLOBAL_NODE
+
 # Homebrew
 set -gx HOMEBREW $BREW/bin:$BREW/sbin
 set -gx PATH $PATH $HOMEBREW
@@ -50,12 +55,7 @@ set -gx PATH $PATH $HOMEBREW_YARN
 set -gx HOMEBREW_NODENV_VERSION (nodenv -v)
 set -gx HOMEBREW_NODENV $BREW/Cellar/nodenv/$HOMEBREW_NODENV_VERSION/bin:$BREW/Cellar/nodenv/$HOMEBREW_NODENV_VERSION/completions:$BREW/Cellar/nodenv/$HOMEBREW_NODENV_VERSION/shims:$HOME/.nodenv/shims
 set -gx PATH $PATH $HOMEBREW_NODENV
-set -Ux fish_user_paths $HOME/.nodenv/bin $fish_user_paths
-
-# Node
-set -gx NODENV_GLOBAL_NODE_VERSION (nodenv global)
-set -gx NODENV_GLOBAL_NODE $HOME/.nodenv/versions/$NODENV_GLOBAL_NODE_VERSION/bin
-set -gx PATH $PATH $NODENV_GLOBAL_NODE
+set -Ux fish_user_paths $NODENV_GLOBAL_NODE $fish_user_paths
 
 # Homebrew Rabbitmq
 set -gx HOMEBREW_RABBITMQ_VERSION (rabbitmqctl version)
@@ -72,7 +72,7 @@ set -gx PATH $PATH $CABAL_HASKELL
 
 # Homebrew LLVM
 set -gx HOMEBREW_LLVM $BREW/Cellar/llvm@12/12.0.1_1/bin
-set -gx PATH $HOMEBREW_LLVM $PATH
+set -gx PATH $PATH $HOMEBREW_LLVM
 
 # Homebrew PostgresSQL
 set -gx HOMEBREW_POSTGRES $BREW/opt/postgresql@15/bin
@@ -105,7 +105,7 @@ thefuck --alias | source
 set -gx OPENAI_API_KEY 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
 
 # Python
-set -gx PATH $HOME/.pyenv/shims $PATH
+set -gx PATH $PATH $HOME/.pyenv/shims
 status --is-interactive; and pyenv init - | source
 status --is-interactive; and pyenv virtualenv-init - | source
 
