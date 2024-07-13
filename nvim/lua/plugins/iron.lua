@@ -17,11 +17,6 @@ return {
                 return require("haskell-tools").repl.mk_repl_cmd(file)
               end,
             },
-            sh = {
-              -- Can be a table or a function that
-              -- returns a table (see below)
-              command = { "fish" },
-            },
           },
           -- How the repl window will be displayed
           -- See below for more information

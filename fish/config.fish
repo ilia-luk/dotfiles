@@ -58,9 +58,9 @@ set -gx PATH $PATH $HOMEBREW_NODENV
 set -Ux fish_user_paths $NODENV_GLOBAL_NODE $fish_user_paths
 
 # Homebrew Rabbitmq
-set -gx HOMEBREW_RABBITMQ_VERSION (rabbitmqctl version)
-set -gx HOMEBREW_RABBITMQ $BREW/Cellar/rabbitmq/$HOMEBREW_RABBITMQ_VERSION/sbin/
-set -gx PATH $PATH $HOMEBREW_RABBITMQ
+# set -gx HOMEBREW_RABBITMQ_VERSION (rabbitmqctl version)
+# set -gx HOMEBREW_RABBITMQ $BREW/Cellar/rabbitmq/$HOMEBREW_RABBITMQ_VERSION/sbin/
+# set -gx PATH $PATH $HOMEBREW_RABBITMQ
 
 # Homebrew Haskell
 set -gx HOMEBREW_HASKELL $HOME/.ghcup/bin/
@@ -94,15 +94,11 @@ alias grep='grep --color=auto'
 # Initialize nodenv
 status --is-interactive; and source (nodenv init -|psub)
 
-# Initialize thefuck
-thefuck --alias | source
 
 # Haskell GHC (TODO make this work)
 # set -gx LDFLAGS= -L$BREW/Cellar/llvm@12/12.0.1_1/lib
 # set -gx CPPFLAGS -I$BREW/Cellar/llvm@12/12.0.1_1/include
 
-# ChatGPT
-set -gx OPENAI_API_KEY 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
 
 # Python
 set -gx PATH $PATH $HOME/.pyenv/shims
@@ -125,5 +121,8 @@ if test -f $LOCAL_CONFIG
 end
 
 # Zellij
-eval (zellij setup --generate-auto-start fish | string collect)
-set -g ZELLIJ_AUTO_EXIT true
+# eval (zellij setup --generate-auto-start fish | string collect)
+# set -g ZELLIJ_AUTO_EXIT true
+
+# Set up fzf key bindings
+fzf --fish | source
